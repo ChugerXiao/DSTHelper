@@ -26,6 +26,9 @@ def getStatus():
 
 def openServer():
     system('./startup.sh')
+    print(1)
+    sleep(3)
+    raise Exception
 
 
 if __name__ == '__main__':
