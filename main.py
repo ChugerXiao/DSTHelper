@@ -37,6 +37,7 @@ if __name__ == '__main__':
     while True:
         sleep(3)
         status = getStatus()
+        print(status)
         if status[0] == '1':
             print('Restarting the server.')
             closeServer()
