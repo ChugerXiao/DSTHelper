@@ -36,8 +36,9 @@ def openServer():
 
 
 if __name__ == '__main__':
-    thread = Thread(target=openServer)
-    thread.start()
+    openServer()
+    # thread = Thread(target=openServer)
+    # thread.start()
     while True:
         sleep(3)
         status = getStatus()
@@ -46,7 +47,8 @@ if __name__ == '__main__':
             print('Restarting the server.')
             closeServer()
             sleep(5)
-            thread.start()
+            # thread.start()
+            openServer()
             status[0] = '0'
             writeStatus(status)
 
