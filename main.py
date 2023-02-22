@@ -1,32 +1,14 @@
 from threading import Thread
-from os import system
+from os import system, path
 from time import sleep
-
-initialFile = [
-    '0',  # 是否重启
-    '0',
-    '0',
-]
+from configparser import ConfigParser
 
 
-def init():
-    with open('status', 'w+') as file:
-        file.write('\n'.join(initialFile))
-
-
-def getStatus():
-    try:
-        with open('status', 'r+') as file:
-            status = file.read().split('\n')
-    except:
-        init()
-        status = initialFile
-    return status
-
-
-def writeStatus(status):
-    with open('status', 'w+') as file:
-        file.write('\n'.join(status))
+def init(conf):
+    with open('status.ini', 'w+'): pass
+    conf.add_section('STATUS')
+    conf.set('STATUS', 'restart', 'false')
+    conf.write(open('status.ini', 'w'))
 
 
 def closeServer():
@@ -40,14 +22,20 @@ def openServer():
 if __name__ == '__main__':
     thread = Thread(target=openServer)
     thread.start()
+    conf = ConfigParser()
     while True:
         sleep(3)
-        status = getStatus()
-        if status[0] == '1':
+        if not path.exists('status.ini'): init(conf)
+        conf.read('status.ini')
+        try:
+            restart = conf.get('STATUS', 'restart')
+        except:
+            restart = 'false'
+        if restart == 'true':
             print('Restarting the server.')
             closeServer()
             sleep(5)
             thread = Thread(target=openServer)
             thread.start()
-            status[0] = '0'
-            writeStatus(status)
+            conf.set('STATUS','restart','false')
+            conf.write(open('status.ini', 'w'))
