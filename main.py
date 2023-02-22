@@ -24,21 +24,23 @@ def getStatus():
         status = initialFile
     return status
 
+
 def writeStatus(status):
     with open('status', 'w+') as file:
         file.write('\n'.join(status))
 
+
 def closeServer():
     system("ps au | grep ./startup.sh | grep /bin/bash | awk '{print $2}' | xargs kill")
+
 
 def openServer():
     system('./startup.sh')
 
 
 if __name__ == '__main__':
-    openServer()
-    # thread = Thread(target=openServer)
-    # thread.start()
+    thread = Thread(target=openServer)
+    thread.start()
     while True:
         sleep(3)
         status = getStatus()
@@ -47,8 +49,7 @@ if __name__ == '__main__':
             print('Restarting the server.')
             closeServer()
             sleep(5)
-            # thread.start()
-            openServer()
+            thread = Thread(target=openServer)
+            thread.start()
             status[0] = '0'
             writeStatus(status)
-
