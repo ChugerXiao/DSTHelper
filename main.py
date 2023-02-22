@@ -1,4 +1,5 @@
 from threading import Thread
+from multiprocessing import Process
 from os import system
 from time import sleep
 
@@ -24,21 +25,21 @@ def getStatus():
     return status
 
 
+def closeServer():
+    system('ps au | grep ./startup.sh | grep /bin/bash | awk "{print $2}" | xargs kill')
+
 def openServer():
     system('./startup.sh')
-    print(1)
-    sleep(3)
-    raise Exception
 
 
 if __name__ == '__main__':
-    init()
-    thread = Thread(target=openServer)
-    thread.start()
+    openServer()
     while True:
         sleep(3)
         status = getStatus()
         if status[0] == '1':
             print('Restarting the server.')
-            # thread.()
+            closeServer()
+            sleep(5)
+            openServer()
 
