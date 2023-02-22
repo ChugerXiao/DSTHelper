@@ -29,7 +29,7 @@ def writeStatus(status):
         file.write('\n'.join(status))
 
 def closeServer():
-    system('ps au | grep ./startup.sh | grep /bin/bash | awk "{print $2}" | xargs kill')
+    system("ps au | grep ./startup.sh | grep /bin/bash | awk '{print $2}' | xargs kill")
 
 def openServer():
     system('./startup.sh')
